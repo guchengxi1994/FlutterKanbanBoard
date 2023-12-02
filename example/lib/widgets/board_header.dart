@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 class BoardHeader extends StatelessWidget {
@@ -18,52 +16,50 @@ class BoardHeader extends StatelessWidget {
                   color: Colors.black,
                   fontWeight: FontWeight.w900)),
           const Spacer(),
-          Platform.isWindows || Platform.isLinux || Platform.isMacOS
-              ? Row(
-                  children: [
-                    const Icon(
-                      Icons.search,
-                      size: 18,
-                    ),
-                    const SizedBox(
-                      width: 25,
-                    ),
-                    const Icon(
-                      Icons.notifications,
-                      size: 18,
-                    ),
-                    const SizedBox(
-                      width: 25,
-                    ),
-                    const Icon(
-                      Icons.extension,
-                      size: 18,
-                    ),
-                    const SizedBox(
-                      width: 25,
-                    ),
-                    GestureDetector(
-                      child: Container(
-                        padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                        decoration: BoxDecoration(
-                            color: const Color.fromRGBO(175, 123, 251, 1),
-                            borderRadius: BorderRadius.circular(2),
-                            border: Border.all(color: Colors.black)),
-                        child: const Row(
-                          children: [
-                            Icon(Icons.add_circle_outlined),
-                            Text("Create new",
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold)),
-                          ],
-                        ),
-                      ),
-                    )
-                  ],
-                )
-              : Container()
+          Row(
+            children: [
+              const Icon(
+                Icons.search,
+                size: 18,
+              ),
+              const SizedBox(
+                width: 25,
+              ),
+              const Icon(
+                Icons.notifications,
+                size: 18,
+              ),
+              const SizedBox(
+                width: 25,
+              ),
+              const Icon(
+                Icons.extension,
+                size: 18,
+              ),
+              const SizedBox(
+                width: 25,
+              ),
+              GestureDetector(
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                  decoration: BoxDecoration(
+                      color: const Color.fromRGBO(175, 123, 251, 1),
+                      borderRadius: BorderRadius.circular(2),
+                      border: Border.all(color: Colors.black)),
+                  child: const Row(
+                    children: [
+                      Icon(Icons.add_circle_outlined),
+                      Text("Create new",
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          )
         ],
       ),
     );

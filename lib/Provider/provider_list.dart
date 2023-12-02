@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kanban_board/Provider/draggable_provider.dart';
+import 'package:kanban_board/functions.dart';
 
 import 'list_item_provider.dart';
 
@@ -7,10 +8,10 @@ import 'board_list_provider.dart';
 import 'board_provider.dart';
 
 class ProviderList {
-  ProviderList({this.onItemReorder});
+  ProviderList({this.onItemReorder, this.onListReorder});
 
-  final void Function(int? oldCardIndex, int? newCardIndex, int? oldListIndex,
-      int? newListIndex)? onItemReorder;
+  final OnItemReorder? onItemReorder;
+  final OnListReorder? onListReorder;
 
   static final boardProvider = ChangeNotifierProvider<BoardProvider>(
     (ref) => BoardProvider(ref),
@@ -19,11 +20,11 @@ class ProviderList {
     (ref) => ListItemProvider(ref, onItemReorder),
   );
 
-  static final boardListProvider = ChangeNotifierProvider<BoardListProvider>(
-    (ref) => BoardListProvider(ref),
+  late final boardListProvider = ChangeNotifierProvider<BoardListProvider>(
+    (ref) => BoardListProvider(ref, onListReorder),
   );
 
   static final draggableNotifier =
       StateNotifierProvider<DraggableNotfier, DraggableProviderState>(
-          (ref) => DraggableNotfier(ref));
+          (_) => DraggableNotfier());
 }

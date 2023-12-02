@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kanban_board/functions.dart';
 import 'board_list.dart';
 import 'inputs.dart';
 
@@ -18,16 +19,14 @@ class BoardState {
   int? prevItemOfListIndex = 0;
   double? displacementX;
   double? displacementY;
-  Function(int? itemIndex, int? listIndex)? onItemTap;
-  Function(int? itemIndex, int? listIndex)? onItemLongPress;
-  Function(int? listIndex)? onListTap;
-  Function(int? listIndex)? onListLongPress;
-  final void Function(int? oldCardIndex, int? newCardIndex, int? oldListIndex,
-      int? newListIndex)? onItemReorder;
-  final void Function(int? oldListIndex, int? newListIndex)? onListReorder;
-  final void Function(String? oldName, String? newName)? onListRename;
-  final void Function(String? cardIndex, String? listIndex, String? text)?
-      onNewCardInsert;
+  final OnItemTap? onItemTap;
+  final OnItemReorder? onItemReorder;
+  final OnListReorder? onListReorder;
+  final OnItemLongPress? onItemLongPress;
+  final OnListTap? onListTap;
+  final OnListLongPress? onListLongPress;
+  final OnListRename? onListRename;
+  final OnNewCardInsert? onNewCardInsert;
   Color? backgroundColor;
   Color? cardPlaceholderColor;
   Color? listPlaceholderColor;
@@ -74,10 +73,8 @@ class BoardState {
 }
 
 class TransitionHandler {
-  final Widget Function(Widget child, Animation<double> animation)
-      cardTransitionBuilder;
-  final Widget Function(Widget child, Animation<double> animation)
-      listTransitionBuilder;
+  final CardTransitionBuilder cardTransitionBuilder;
+  final ListTransitionBuilder listTransitionBuilder;
   final Duration cardTransitionDuration;
   final Duration listTransitionDuration;
 

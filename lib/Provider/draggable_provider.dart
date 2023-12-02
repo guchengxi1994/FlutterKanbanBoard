@@ -27,8 +27,8 @@ class DraggableProviderState {
 }
 
 class DraggableNotfier extends StateNotifier<DraggableProviderState> {
-  DraggableNotfier(this.ref) : super(DraggableProviderState());
-  StateNotifierProviderRef<DraggableNotfier, DraggableProviderState> ref;
+  DraggableNotfier() : super(DraggableProviderState());
+
   void setDraggableType(DraggableType draggableType) {
     state = state.copyWith(draggableType: draggableType);
   }

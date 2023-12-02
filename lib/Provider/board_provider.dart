@@ -6,6 +6,7 @@ import 'package:kanban_board/Provider/provider_list.dart';
 import 'package:kanban_board/draggable/card_draggable.dart';
 import 'package:kanban_board/draggable/draggable_state.dart';
 import 'package:kanban_board/draggable/list_draggable.dart';
+import 'package:kanban_board/functions.dart';
 import '../models/inputs.dart';
 import '../models/board.dart';
 import '../models/board_list.dart';
@@ -31,25 +32,20 @@ class BoardProvider extends ChangeNotifier {
       {required List<BoardListsData> data,
       Color backgroundColor = Colors.white,
       TextStyle? textStyle,
-      Function(int? itemIndex, int? listIndex)? onItemTap,
-      Function(int? itemIndex, int? listIndex)? onItemLongPress,
-      Function(int? listIndex)? onListTap,
-      Function(int? listIndex)? onListLongPress,
+      OnItemTap? onItemTap,
+      OnItemLongPress? onItemLongPress,
+      OnListTap? onListTap,
+      OnListLongPress? onListLongPress,
       double? displacementX,
       double? displacementY,
-      void Function(int? oldCardIndex, int? newCardIndex, int? oldListIndex,
-              int? newListIndex)?
-          onItemReorder,
-      void Function(int? oldListIndex, int? newListIndex)? onListReorder,
-      void Function(String? oldName, String? newName)? onListRename,
-      void Function(String? cardIndex, String? listIndex, String? text)?
-          onNewCardInsert,
+      OnItemReorder? onItemReorder,
+      OnListReorder? onListReorder,
+      OnListRename? onListRename,
+      OnNewCardInsert? onNewCardInsert,
       Decoration? boardDecoration,
       Decoration? listDecoration,
-      Widget Function(Widget child, Animation<double> animation)?
-          listTransitionBuilder,
-      Widget Function(Widget child, Animation<double> animation)?
-          cardTransitionBuilder,
+      ListTransitionBuilder? listTransitionBuilder,
+      CardTransitionBuilder? cardTransitionBuilder,
       required Duration cardTransitionDuration,
       required Duration listTransitionDuration,
       Color? cardPlaceHolderColor,

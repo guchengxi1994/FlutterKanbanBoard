@@ -14,7 +14,7 @@ class _DraggedCardState extends ConsumerState<DraggedCard> {
   @override
   Widget build(BuildContext context) {
     final boardProv = ref.read(ProviderList.boardProvider);
-    final boardListProv = ref.read(ProviderList.boardListProvider);
+    final boardListProv = ref.read(ProviderList().boardListProvider);
     final draggableProv = ref.watch(ProviderList.draggableNotifier);
 
     return ValueListenableBuilder(

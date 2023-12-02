@@ -1,4 +1,4 @@
-import 'dart:io';
+// ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
 import 'package:kanban_board/custom/board.dart';
@@ -18,8 +18,7 @@ class BoardBuilder extends StatefulWidget {
 }
 
 class _BoardBuilderState extends State<BoardBuilder> {
-  get width =>
-      Platform.isWindows || Platform.isLinux || Platform.isMacOS ? 350 : 250;
+  get width => 350;
 
   @override
   Widget build(BuildContext context) {
@@ -72,9 +71,19 @@ class _BoardBuilderState extends State<BoardBuilder> {
                 }),
                 onItemLongPress: (cardIndex, listIndex) {},
                 onItemReorder:
-                    (oldCardIndex, newCardIndex, oldListIndex, newListIndex) {},
+                    (oldCardIndex, newCardIndex, oldListIndex, newListIndex) {
+                  print("--------------------");
+                  print(oldCardIndex);
+                  print(newCardIndex);
+                  print(oldListIndex);
+                  print(newListIndex);
+                },
                 onListLongPress: (listIndex) {},
-                onListReorder: (oldListIndex, newListIndex) {},
+                onListReorder: (oldListIndex, newListIndex) {
+                  print("--------------------");
+                  print(oldListIndex);
+                  print(newListIndex);
+                },
                 onItemTap: (cardIndex, listIndex) {},
                 onListTap: (listIndex) {},
                 onListRename: (oldName, newName) {},

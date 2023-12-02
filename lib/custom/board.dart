@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kanban_board/constants.dart';
 import 'package:kanban_board/draggable/draggable_state.dart';
 import 'package:kanban_board/draggable/presentation/dragged_card.dart';
+import 'package:kanban_board/functions.dart';
 import '../Provider/provider_list.dart';
 import '../models/board_list.dart' as board_list;
 import '../models/inputs.dart';
@@ -36,6 +37,7 @@ class KanbanBoard extends StatefulWidget {
     this.onItemLongPress,
     this.onListTap,
     this.onListLongPress,
+    this.addListHint = "Add List",
     super.key,
   });
   final List<BoardListsData> list;
@@ -47,24 +49,22 @@ class KanbanBoard extends StatefulWidget {
   final TextStyle? textStyle;
   final Decoration? listDecoration;
   final Decoration? boardDecoration;
-  final void Function(int? cardIndex, int? listIndex)? onItemTap;
-  final void Function(int? cardIndex, int? listIndex)? onItemLongPress;
-  final void Function(int? listIndex)? onListTap;
-  final void Function(int? listIndex)? onListLongPress;
-  final void Function(int? oldCardIndex, int? newCardIndex, int? oldListIndex,
-      int? newListIndex)? onItemReorder;
-  final void Function(int? oldListIndex, int? newListIndex)? onListReorder;
-  final void Function(String? oldName, String? newName)? onListRename;
-  final void Function(String? cardIndex, String? listIndex, String? text)?
-      onNewCardInsert;
-  final Widget Function(Widget child, Animation<double> animation)?
-      cardTransitionBuilder;
-  final Widget Function(Widget child, Animation<double> animation)?
-      listTransitionBuilder;
+  final OnItemTap? onItemTap;
+  final OnItemReorder? onItemReorder;
+  final OnListReorder? onListReorder;
+  final OnItemLongPress? onItemLongPress;
+  final OnListTap? onListTap;
+  final OnListLongPress? onListLongPress;
+  final OnListRename? onListRename;
+  final OnNewCardInsert? onNewCardInsert;
+  final CardTransitionBuilder? cardTransitionBuilder;
+  final ListTransitionBuilder? listTransitionBuilder;
+
   final double displacementX;
   final double displacementY;
   final Duration cardTransitionDuration;
   final Duration listTransitionDuration;
+  final String addListHint;
 
   @override
   State<KanbanBoard> createState() => _KanbanBoardState();
@@ -74,29 +74,32 @@ class _KanbanBoardState extends State<KanbanBoard> {
   @override
   Widget build(BuildContext context) {
     return ProviderScope(
-      child: Board(widget.list,
-          displacementX: widget.displacementX,
-          displacementY: widget.displacementY,
-          backgroundColor: widget.backgroundColor,
-          boardDecoration: widget.boardDecoration,
-          cardPlaceHolderColor: widget.cardPlaceHolderColor,
-          listPlaceHolderColor: widget.listPlaceHolderColor,
-          listDecoration: widget.listDecoration,
-          boardScrollConfig: widget.boardScrollConfig,
-          listScrollConfig: widget.listScrollConfig,
-          textStyle: widget.textStyle,
-          onItemTap: widget.onItemTap,
-          onItemLongPress: widget.onItemLongPress,
-          onListTap: widget.onListTap,
-          onListLongPress: widget.onListLongPress,
-          onItemReorder: widget.onItemReorder,
-          onListReorder: widget.onListReorder,
-          onListRename: widget.onListRename,
-          onNewCardInsert: widget.onNewCardInsert,
-          cardTransitionBuilder: widget.cardTransitionBuilder,
-          listTransitionBuilder: widget.listTransitionBuilder,
-          cardTransitionDuration: widget.cardTransitionDuration,
-          listTransitionDuration: widget.listTransitionDuration),
+      child: Board(
+        widget.list,
+        displacementX: widget.displacementX,
+        displacementY: widget.displacementY,
+        backgroundColor: widget.backgroundColor,
+        boardDecoration: widget.boardDecoration,
+        cardPlaceHolderColor: widget.cardPlaceHolderColor,
+        listPlaceHolderColor: widget.listPlaceHolderColor,
+        listDecoration: widget.listDecoration,
+        boardScrollConfig: widget.boardScrollConfig,
+        listScrollConfig: widget.listScrollConfig,
+        textStyle: widget.textStyle,
+        onItemTap: widget.onItemTap,
+        onItemLongPress: widget.onItemLongPress,
+        onListTap: widget.onListTap,
+        onListLongPress: widget.onListLongPress,
+        onItemReorder: widget.onItemReorder,
+        onListReorder: widget.onListReorder,
+        onListRename: widget.onListRename,
+        onNewCardInsert: widget.onNewCardInsert,
+        cardTransitionBuilder: widget.cardTransitionBuilder,
+        listTransitionBuilder: widget.listTransitionBuilder,
+        cardTransitionDuration: widget.cardTransitionDuration,
+        listTransitionDuration: widget.listTransitionDuration,
+        addListHint: widget.addListHint,
+      ),
     );
   }
 }
@@ -127,6 +130,7 @@ class Board extends ConsumerStatefulWidget {
     this.onListTap,
     this.onListLongPress,
     super.key,
+    required this.addListHint,
   });
   final List<BoardListsData> list;
   final Color backgroundColor;
@@ -137,38 +141,35 @@ class Board extends ConsumerStatefulWidget {
   final Decoration? boardDecoration;
   final ScrollConfig? boardScrollConfig;
   final ScrollConfig? listScrollConfig;
-  final void Function(int? cardIndex, int? listIndex)? onItemTap;
-  final void Function(int? cardIndex, int? listIndex)? onItemLongPress;
-  final void Function(int? listIndex)? onListTap;
-  final void Function(int? listIndex)? onListLongPress;
-  final void Function(int? oldCardIndex, int? newCardIndex, int? oldListIndex,
-      int? newListIndex)? onItemReorder;
-  final void Function(int? oldListIndex, int? newListIndex)? onListReorder;
-  final void Function(String? oldName, String? newName)? onListRename;
-  final void Function(String? cardIndex, String? listIndex, String? text)?
-      onNewCardInsert;
-  final Widget Function(Widget child, Animation<double> animation)?
-      cardTransitionBuilder;
-  final Widget Function(Widget child, Animation<double> animation)?
-      listTransitionBuilder;
+  final OnItemTap? onItemTap;
+  final OnItemReorder? onItemReorder;
+  final OnListReorder? onListReorder;
+  final OnItemLongPress? onItemLongPress;
+  final OnListTap? onListTap;
+  final OnListLongPress? onListLongPress;
+  final OnListRename? onListRename;
+  final OnNewCardInsert? onNewCardInsert;
+  final CardTransitionBuilder? cardTransitionBuilder;
+  final ListTransitionBuilder? listTransitionBuilder;
   final double displacementX;
   final double displacementY;
   final Duration cardTransitionDuration;
   final Duration listTransitionDuration;
+  final String addListHint;
 
   @override
   ConsumerState<Board> createState() => _BoardState();
 }
 
 class _BoardState extends ConsumerState<Board> {
-  late ProviderList providerList =
-      ProviderList(onItemReorder: widget.onItemReorder);
+  late ProviderList providerList = ProviderList(
+      onItemReorder: widget.onItemReorder, onListReorder: widget.onListReorder);
 
   @override
   void initState() {
     var boardProv = ref.read(ProviderList.boardProvider);
     final draggableProv = ref.read(ProviderList.draggableNotifier);
-    var boardListProv = ref.read(ProviderList.boardListProvider);
+    var boardListProv = ref.read(providerList.boardListProvider);
     boardProv.initializeBoard(
         data: widget.list,
         boardScrollConfig: widget.boardScrollConfig,
@@ -245,7 +246,7 @@ class _BoardState extends ConsumerState<Board> {
   @override
   Widget build(BuildContext context) {
     var boardProv = ref.read(ProviderList.boardProvider);
-    var boardListProv = ref.read(ProviderList.boardListProvider);
+    var boardListProv = ref.read(providerList.boardListProvider);
     final draggableProv = ref.watch(ProviderList.draggableNotifier);
     final draggableNotifier = ref.read(ProviderList.draggableNotifier.notifier);
     double statusBarHeight = MediaQuery.of(context).padding.top;
@@ -460,7 +461,8 @@ class _BoardState extends ConsumerState<Board> {
                                                         child: DottedBorder(
                                                           child: Center(
                                                               child: Text(
-                                                                  "Add List",
+                                                                  widget
+                                                                      .addListHint,
                                                                   style: widget
                                                                       .textStyle)),
                                                         )),

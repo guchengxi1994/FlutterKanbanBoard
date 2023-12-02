@@ -21,7 +21,7 @@ class _BoardListState extends ConsumerState<BoardList> {
   @override
   Widget build(BuildContext context) {
     var prov = ref.read(ProviderList.boardProvider);
-    var listProv = ref.read(ProviderList.boardListProvider);
+    var listProv = ref.read(ProviderList().boardListProvider);
     final draggableNotfier = ref.read(ProviderList.draggableNotifier);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       listProv.calculateSizePosition(

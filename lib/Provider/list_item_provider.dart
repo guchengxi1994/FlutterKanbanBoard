@@ -3,6 +3,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kanban_board/draggable/draggable_state.dart';
+import 'package:kanban_board/functions.dart';
 import '../models/board_list.dart';
 import '../models/item_state.dart';
 import 'provider_list.dart';
@@ -11,8 +12,7 @@ class ListItemProvider extends ChangeNotifier {
   ListItemProvider(
       ChangeNotifierProviderRef<ListItemProvider> this.ref, this.onItemReorder);
   Ref ref;
-  final void Function(int? oldCardIndex, int? newCardIndex, int? oldListIndex,
-      int? newListIndex)? onItemReorder;
+  final OnItemReorder? onItemReorder;
   TextEditingController newCardTextController = TextEditingController();
 
   void calculateCardPositionSize(
@@ -563,8 +563,13 @@ class ListItemProvider extends ChangeNotifier {
           boardProv.board.dragItemIndex!,
           boardProv.board.lists[boardProv.draggedItemState!.listIndex!].items
               .removeAt(boardProv.draggedItemState!.itemIndex!));
+
       newListIndex = oldListIndex;
-      newCardIndex = boardProv.board.dragItemIndex!;
+      newCardIndex = boardProv.board.dragItemIndex == 0
+          ? 0
+          : card.placeHolderAt == PlaceHolderAt.top
+              ? boardProv.board.dragItemIndex! - 1
+              : boardProv.board.dragItemIndex!;
     } else {
       if (card.placeHolderAt == PlaceHolderAt.bottom) {
         list.items.insert(

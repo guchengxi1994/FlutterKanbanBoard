@@ -3,14 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kanban_board/constants.dart';
 import 'package:kanban_board/draggable/draggable_state.dart';
+import 'package:kanban_board/functions.dart';
 import '../custom/list_item.dart';
 import '../custom/text_field.dart';
 import '../models/item_state.dart';
 import 'provider_list.dart';
 
 class BoardListProvider extends ChangeNotifier {
-  BoardListProvider(ChangeNotifierProviderRef<BoardListProvider> this.ref);
+  BoardListProvider(ChangeNotifierProviderRef<BoardListProvider> this.ref,
+      this.onListReorder);
   Ref ref;
+
+  final OnListReorder? onListReorder;
+
   var scrolling = false;
   var scrollingUp = false;
   var scrollingDown = false;
@@ -121,6 +126,11 @@ class BoardListProvider extends ChangeNotifier {
                   itemCount: prov.board.lists[listIndex].items.length,
                   shrinkWrap: true,
                   itemBuilder: (ctx, index) {
+                    // print(index);
+                    if (index >= prov.board.lists[listIndex].items.length) {
+                      return const SizedBox();
+                    }
+
                     return Item(
                       color: prov.board.lists[listIndex].items[index]
                               .backgroundColor ??
@@ -252,6 +262,11 @@ class BoardListProvider extends ChangeNotifier {
     prov.draggedItemState!.itemIndex = null;
     prov.board.lists[prov.draggedItemState!.listIndex! - 1].setState!();
     prov.board.lists[prov.draggedItemState!.listIndex!].setState!();
+
+    if (onListReorder != null) {
+      onListReorder!(prov.draggedItemState!.listIndex!,
+          prov.draggedItemState!.listIndex! + 1);
+    }
   }
 
   void moveListLeft() {
@@ -276,6 +291,11 @@ class BoardListProvider extends ChangeNotifier {
     prov.draggedItemState!.itemIndex = null;
     prov.board.lists[prov.draggedItemState!.listIndex!].setState!();
     prov.board.lists[prov.draggedItemState!.listIndex! + 1].setState!();
+
+    if (onListReorder != null) {
+      onListReorder!(prov.draggedItemState!.listIndex!,
+          prov.draggedItemState!.listIndex! - 1);
+    }
   }
 
   void createNewList() {}
