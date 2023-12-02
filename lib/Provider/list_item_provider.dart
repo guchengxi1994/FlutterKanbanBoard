@@ -8,8 +8,11 @@ import '../models/item_state.dart';
 import 'provider_list.dart';
 
 class ListItemProvider extends ChangeNotifier {
-  ListItemProvider(ChangeNotifierProviderRef<ListItemProvider> this.ref);
+  ListItemProvider(
+      ChangeNotifierProviderRef<ListItemProvider> this.ref, this.onItemReorder);
   Ref ref;
+  final void Function(int? oldCardIndex, int? newCardIndex, int? oldListIndex,
+      int? newListIndex)? onItemReorder;
   TextEditingController newCardTextController = TextEditingController();
 
   void calculateCardPositionSize(
@@ -548,26 +551,44 @@ class ListItemProvider extends ChangeNotifier {
     ListItem card = list.items[boardProv.board.dragItemIndex!];
     card.child = card.prevChild;
 
+    final oldCardIndex = boardProv.draggedItemState!.itemIndex!;
+    final oldListIndex = boardProv.draggedItemState!.listIndex!;
+
+    late int newCardIndex = -1;
+    late int newListIndex = -1;
+
     if (boardProv.draggedItemState!.listIndex ==
         boardProv.board.dragItemOfListIndex!) {
       list.items.insert(
           boardProv.board.dragItemIndex!,
           boardProv.board.lists[boardProv.draggedItemState!.listIndex!].items
               .removeAt(boardProv.draggedItemState!.itemIndex!));
+      newListIndex = oldListIndex;
+      newCardIndex = boardProv.board.dragItemIndex!;
     } else {
       if (card.placeHolderAt == PlaceHolderAt.bottom) {
         list.items.insert(
             boardProv.board.dragItemIndex! + 1,
             boardProv.board.lists[boardProv.draggedItemState!.listIndex!].items
                 .removeAt(boardProv.draggedItemState!.itemIndex!));
+
+        newListIndex = boardProv.board.dragItemOfListIndex!;
+        newCardIndex = boardProv.board.dragItemIndex! + 1;
       } else {
         list.items.insert(
             boardProv.board.dragItemIndex!,
             boardProv.board.lists[boardProv.draggedItemState!.listIndex!].items
                 .removeAt(boardProv.draggedItemState!.itemIndex!));
+
+        newListIndex = boardProv.board.dragItemOfListIndex!;
+        newCardIndex = boardProv.board.dragItemIndex!;
       }
     }
 
     card.placeHolderAt = PlaceHolderAt.none;
+
+    if (onItemReorder != null) {
+      onItemReorder!(oldCardIndex, newCardIndex, oldListIndex, newListIndex);
+    }
   }
 }
